@@ -10,5 +10,6 @@ import com.ngawung.calfik.state.HelloWorld;
 public class Main extends InsMain {
     protected void init() {
         init(new HelloWorld(), ScreenOrientation.PORTRAIT);
+        
     }
 }

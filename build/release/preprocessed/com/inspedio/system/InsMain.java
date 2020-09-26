@@ -52,11 +52,7 @@ public abstract class InsMain extends MIDlet{
 	}
 	
 	protected void init(InsState InitialState, InsLoader Loader, InsSave SaveLoad, InsPause Pause, ScreenOrientation Mode, int FPS, int MaxFrameSkip){
-		this.init(InitialState, Loader, SaveLoad, Pause, Mode, FPS, MaxFrameSkip, false);
-	}
-	
-	protected void init(InsState InitialState, InsLoader Loader, InsSave SaveLoad, InsPause Pause, ScreenOrientation Mode, int FPS, int MaxFrameSkip, boolean enablePause){
-		InsGame.init(this, InitialState, FPS, MaxFrameSkip, Loader, SaveLoad, Pause, Mode, enablePause);
+		InsGame.init(this, InitialState, FPS, MaxFrameSkip, Loader, SaveLoad, Pause, Mode);
 	}
 	
 	

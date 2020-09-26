@@ -156,14 +156,6 @@ public class InsGlobal{
 	 */
 	public static boolean useLogo = true;
 	/**
-	 * Set this to TRUE to enable Payment from Tequila
-	 */
-	public static boolean enablePaymentTequila = false;
-	/**
-	 * Marker for when Payment take application focus
-	 */
-	public static boolean onFocusPayment = false;	
-	/**
 	 * Set this to change FPS Display Color
 	 */
 	public static int FPS_COLOR = InsCanvas.COLOR_BLACK;

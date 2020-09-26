@@ -5,12 +5,12 @@ import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.game.GameCanvas;
-import javax.microedition.lcdui.game.Sprite;
 
 import com.inspedio.enums.InputType;
 import com.inspedio.enums.ScreenOrientation;
 import com.inspedio.system.helper.InsUtil;
 import com.inspedio.system.helper.extension.InsPointerEvent;
+import javax.microedition.lcdui.game.Sprite;
 
 /**
  * <code>InsCanvas</code> is how engine render its graphic.<br>
@@ -148,7 +148,7 @@ public class InsCanvas extends GameCanvas{
 	 * Transform Coordinate touched depend on Orientation
 	 */
 	protected InsPointerEvent transformCoordinate(InsPointerEvent e){
-		if(rotateCanvas && !InsGlobal.onFocusPayment){
+		if(rotateCanvas){
 			int tmpX = e.x;
 			int tmpY = e.y;
 			
@@ -177,13 +177,8 @@ public class InsCanvas extends GameCanvas{
 	 */
 	public void clearScreen()
 	{
-		if(InsGlobal.onFocusPayment && InsGlobal.enablePaymentTequila){
-			this.graphic.setColor(InsGlobal.BG_COLOR);
-			this.graphic.fillRect(0, 0, getWidth(), getHeight());
-		} else {
-			this.bufferGraphics.setColor(InsGlobal.BG_COLOR);
-			this.bufferGraphics.fillRect(0, 0, this.deviceWidth, this.deviceHeight);
-		}
+        this.bufferGraphics.setColor(InsGlobal.BG_COLOR);
+        this.bufferGraphics.fillRect(0, 0, this.deviceWidth, this.deviceHeight);
 	}
 	
 	/**
@@ -225,13 +220,11 @@ public class InsCanvas extends GameCanvas{
 	}
 		
 	public void flushGraphics(){
-		if(!(InsGlobal.onFocusPayment && InsGlobal.enablePaymentTequila)){
-			if(rotateCanvas){
-				this.graphic.drawRegion(this.bufferImage, 0, 0, deviceWidth, deviceHeight, Sprite.TRANS_ROT90, 0, 0, Graphics.LEFT | Graphics.TOP);
-			} else{
-				this.graphic.drawRegion(this.bufferImage, 0, 0, deviceWidth, deviceHeight, Sprite.TRANS_NONE, 0, 0, Graphics.LEFT | Graphics.TOP);
-			}
-		}
+        if(rotateCanvas){
+            this.graphic.drawRegion(this.bufferImage, 0, 0, deviceWidth, deviceHeight, Sprite.TRANS_ROT90, 0, 0, Graphics.LEFT | Graphics.TOP);
+        } else{
+            this.graphic.drawRegion(this.bufferImage, 0, 0, deviceWidth, deviceHeight, Sprite.TRANS_NONE, 0, 0, Graphics.LEFT | Graphics.TOP);
+        }
 		super.flushGraphics();
 	}
 	

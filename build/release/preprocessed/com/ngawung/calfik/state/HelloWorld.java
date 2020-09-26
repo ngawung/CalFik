@@ -12,6 +12,8 @@ public class HelloWorld extends InsState {
     public void create() {
         InsText text = new InsText("Hello World");
         add(text);
+        
+        System.err.println("Hello World");
     }
     
 }

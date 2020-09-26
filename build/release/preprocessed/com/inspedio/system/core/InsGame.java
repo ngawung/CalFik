@@ -16,7 +16,6 @@ import com.inspedio.system.helper.InsPause;
 import com.inspedio.system.helper.InsPointer;
 import com.inspedio.system.helper.InsSave;
 import com.inspedio.system.helper.InsStats;
-import com.inspedio.system.helper.payment.InsPaymentTequila;
 
 /**
  * <code>InsGame</code> is the core of Inspedio Engine.<br>
@@ -118,11 +117,11 @@ public class InsGame implements Runnable {
 	 * 
 	 * @return	Reference to <code>InsGame</code> instance
 	 */
-	public static InsGame init(MIDlet Midlet, InsState InitialState, int FPS, int MaxFrameSkip, InsLoader Loader, InsSave SaveLoad, InsPause Pause, ScreenOrientation Mode, boolean EnablePayment){
+	public static InsGame init(MIDlet Midlet, InsState InitialState, int FPS, int MaxFrameSkip, InsLoader Loader, InsSave SaveLoad, InsPause Pause, ScreenOrientation Mode){
 		try
 		{
 			if(instance == null){
-				instance = new InsGame(Midlet, InitialState, FPS, MaxFrameSkip, Loader, SaveLoad, Pause, Mode, EnablePayment);
+				instance = new InsGame(Midlet, InitialState, FPS, MaxFrameSkip, Loader, SaveLoad, Pause, Mode);
 			} else {
 				throw new Exception("InsGame instance already initialized");
 			}
@@ -134,7 +133,7 @@ public class InsGame implements Runnable {
 	}
 	
 	
-	private InsGame(MIDlet Midlet, InsState InitialState, int FPS, int MaxFrameSkip, InsLoader Loader, InsSave SaveLoad, InsPause Pause, ScreenOrientation Mode, boolean EnablePayment)
+	private InsGame(MIDlet Midlet, InsState InitialState, int FPS, int MaxFrameSkip, InsLoader Loader, InsSave SaveLoad, InsPause Pause, ScreenOrientation Mode)
 	{
 		initGame(Mode);
 		InsGlobal.midlet = Midlet;
@@ -167,8 +166,6 @@ public class InsGame implements Runnable {
 			this.requestedState = InitialState;
 			this.switchState(false);
 		}
-		
-		InsGlobal.enablePaymentTequila = EnablePayment;
 	}
 	
 	/**
@@ -285,40 +282,36 @@ public class InsGame implements Runnable {
 			long curtime = System.currentTimeMillis();
 			this.updateKeyState();
 			this.updatePointerState();
-			if(InsGlobal.enablePaymentTequila && InsGlobal.onFocusPayment){
-				InsPaymentTequila.getInstance().update();
-			} else{
-				if(!InsGlobal.paused){
-					if(!this.state.deleted)
-					{
-						if(this.switchStateRequested)
-						{
-							this.switchState(this.switchStateUseLoader);
-							this.switchStateRequested = false;
-							this.switchStateUseLoader = false;
-						}
-						if(InsGlobal.keys.justPressed(KeyCode.SOFTKEY_LEFT))
-						{
-							this.state.onLeftSoftKey();
-						}
-						if(InsGlobal.keys.justPressed(KeyCode.SOFTKEY_RIGHT))
-						{
-							this.state.onRightSoftKey();
-						}
-						if(this.state != null){
-							if(!this.state.deleted){
-								this.state.preUpdate();
-								this.state.update();
-								this.state.postUpdate();
-							}
-						}
-					}
-				} else {
-					if(InsGlobal.keys.isAnythingPressed() || InsGlobal.pointer.isAnythingPressed()){
-						InsGlobal.resumeGame();
-					}
-				}
-			}
+                            if(!InsGlobal.paused){
+                                    if(!this.state.deleted)
+                                    {
+                                            if(this.switchStateRequested)
+                                            {
+                                                    this.switchState(this.switchStateUseLoader);
+                                                    this.switchStateRequested = false;
+                                                    this.switchStateUseLoader = false;
+                                            }
+                                            if(InsGlobal.keys.justPressed(KeyCode.SOFTKEY_LEFT))
+                                            {
+                                                    this.state.onLeftSoftKey();
+                                            }
+                                            if(InsGlobal.keys.justPressed(KeyCode.SOFTKEY_RIGHT))
+                                            {
+                                                    this.state.onRightSoftKey();
+                                            }
+                                            if(this.state != null){
+                                                    if(!this.state.deleted){
+                                                            this.state.preUpdate();
+                                                            this.state.update();
+                                                            this.state.postUpdate();
+                                                    }
+                                            }
+                                    }
+                            } else {
+                                    if(InsGlobal.keys.isAnythingPressed() || InsGlobal.pointer.isAnythingPressed()){
+                                            InsGlobal.resumeGame();
+                                    }
+                            }
 			InsGlobal.stats.updateCount++;
 			InsGlobal.stats.updateTime += (System.currentTimeMillis() - curtime);
 		}
@@ -353,25 +346,21 @@ public class InsGame implements Runnable {
 		{
 			long curtime = System.currentTimeMillis();
 			this.canvas.clearScreen();
-			if(InsGlobal.enablePaymentTequila && InsGlobal.onFocusPayment){
-				InsPaymentTequila.getInstance().draw(InsGlobal.canvas.getInternalGraphic());
-			} else {
-				if(this.state != null){
-					if(!this.state.deleted){
-						
-						this.state.draw(InsGlobal.graphic);
-						
-						if(InsGlobal.paused){
-							InsGlobal.pause.draw(InsGlobal.graphic);
-						}
-						if(InsGlobal.displayFPS)
-						{
-							this.canvas.drawFPS();
-						}
-						
-					}
-				}
-			}
+            if(this.state != null){
+                if(!this.state.deleted){
+
+                    this.state.draw(InsGlobal.graphic);
+
+                    if(InsGlobal.paused){
+                        InsGlobal.pause.draw(InsGlobal.graphic);
+                    }
+                    if(InsGlobal.displayFPS)
+                    {
+                        this.canvas.drawFPS();
+                    }
+
+                }
+            }
 			this.canvas.flushGraphics();
 			InsGlobal.stats.renderCount++;
 			InsGlobal.stats.renderTime += (System.currentTimeMillis() - curtime);
